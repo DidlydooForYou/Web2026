@@ -1,0 +1,64 @@
+﻿@model Models.Media
+
+@{
+    var owner = DAL.DB.Users.Get(Model.OwnerId);
+    bool userConnected = Models.User.ConnectedUser != null;
+    bool userIsAdmin = userConnected ? Models.User.ConnectedUser.IsAdmin : false;
+    int currentUserId = Models.User.ConnectedUser.Id;
+}
+
+@if (Model != null)
+{
+
+
+<dl>
+        <dd>
+            @if ((userIsAdmin || Model.OwnerId == currentUserId) && Model.Shared)
+            {
+                <span style="color:grey">[Partagé]</span>
+            }
+        </dd>
+        <dd>
+            @Model.Title
+        </dd>
+        <dd>
+            @Helper.YoutubePlayer(Model.YoutubeId)
+        </dd>
+        <dd class="description">
+            @Model.Description
+        </dd>
+        <dt>
+            Catégorie
+        </dt>
+
+        <dd>
+            @Model.Category
+        </dd>
+
+        <dt>
+            Date de publication
+        </dt>
+
+        <dd>
+            @Helper.When(Model.PublishDate)
+        </dd>
+
+        <dt>
+            Ajouté par
+        </dt>
+
+        <dd>
+            @if (owner != null)
+            {
+                <img src="@owner.Avatar" class="UserMediumAvatar" />
+                @owner.Name
+            }
+            else
+            {
+                <img src="/App_Assets/Users/no_avatar.png" class="UserMediumAvatar" />
+                    @:Utilisateur inconnu [Partagé]
+            }
+        </dd>
+
+    </dl>
+}
